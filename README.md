@@ -69,16 +69,6 @@ Phishing-Awareness-System/
    ```
    Open http://127.0.0.1:5000
 
-## Default administrator (development only)
-
-```
-Email:                        
-Password: Admin@123
-```
-
-Change this password immediately after the first login in any shared or
-public deployment, and never reuse it elsewhere.
-
 ## Security notes
 
 - Passwords are stored with Werkzeug PBKDF2 hashing; plain passwords are never saved.
