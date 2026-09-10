@@ -1,0 +1,57 @@
+{% import 'components/icons.html' as ico %}
+<header class="navbar">
+  <nav class="navbar__inner" aria-label="Main navigation">
+    <a class="brand" href="{{ url_for('main.index') }}">
+      <span class="brand__mark">{{ ico.icon('shield', 21) }}</span>
+      <span class="brand__text">
+        CyberAware
+        <small>Scam &amp; Fraud Detection Program</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks"
+            aria-label="Toggle navigation menu"><span></span></button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ url_for('main.index') }}" class="{{ 'is-active' if request.endpoint == 'main.index' }}">Home</a></li>
+      <li><a href="{{ url_for('main.about') }}" class="{{ 'is-active' if request.endpoint == 'main.about' }}">About</a></li>
+      <li class="dropdown">
+        <a href="{{ url_for('main.awareness') }}" data-dropdown-trigger aria-expanded="false" aria-haspopup="true"
+           class="{{ 'is-active' if request.endpoint in ['main.awareness','main.scam_detail','main.safety_center','main.scams'] }}">Learn ▾</a>
+        <ul class="dropdown__panel">
+          <li><a href="{{ url_for('main.awareness') }}">Scam Awareness</a></li>
+          <li><a href="{{ url_for('main.scams') }}">Scam Example Library</a></li>
+          <li><a href="{{ url_for('main.safety_center') }}">Cyber Safety Centre</a></li>
+          <li><a href="{{ url_for('quiz.learning') }}">Guided Learning Path</a></li>
+          <li><a href="{{ url_for('main.resources') }}">Resources</a></li>
+        </ul>
+      </li>
+      <li><a href="{{ url_for('quiz.spot_scam') }}" class="{{ 'is-active' if request.endpoint == 'quiz.spot_scam' }}">Spot the Scam</a></li>
+      <li class="dropdown">
+        <a href="{{ url_for('quiz.pre_test') }}" data-dropdown-trigger aria-expanded="false" aria-haspopup="true"
+           class="{{ 'is-active' if request.endpoint in ['quiz.pre_test','quiz.post_test'] }}">Quiz ▾</a>
+        <ul class="dropdown__panel">
+          <li><a href="{{ url_for('quiz.pre_test') }}">Pre-Test</a></li>
+          <li><a href="{{ url_for('quiz.post_test') }}">Post-Test</a></li>
+        </ul>
+      </li>
+      <li><a href="{{ url_for('main.videos') }}" class="{{ 'is-active' if request.endpoint == 'main.videos' }}">Videos</a></li>
+      <li><a href="{{ url_for('main.emergency') }}" class="{{ 'is-active' if request.endpoint == 'main.emergency' }}">Got Scammed?</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      {% if session_user.role == 'user' %}
+        <a class="btn btn--ghost btn--sm" href="{{ url_for('auth.profile') }}">{{ ico.icon('user', 16) }} Profile</a>
+        <form method="post" action="{{ url_for('auth.logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="btn btn--ghost btn--sm" type="submit">Log out</button>
+        </form>
+      {% elif session_user.role == 'admin' %}
+        <a class="btn btn--ghost btn--sm" href="{{ url_for('admin.dashboard') }}">Admin panel</a>
+      {% else %}
+        <a class="btn btn--ghost btn--sm" href="{{ url_for('auth.login') }}">Log in</a>
+        <a class="btn btn--primary btn--sm" href="{{ url_for('auth.register') }}">Get started</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>

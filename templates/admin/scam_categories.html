@@ -1,0 +1,38 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Scam categories{% endblock %}{% block heading %}Scam categories{% endblock %}
+{% block content %}
+<div class="table-wrap"><table><thead><tr><th>Name</th><th>Slug</th><th>Risk</th><th>Summary</th><th>Actions</th></tr></thead><tbody>
+{% for c in categories %}
+<tr>
+  <td>{{ c.name }}</td><td>{{ c.slug }}</td><td><span class="badge badge--muted">{{ c.risk_level }}</span></td>
+  <td style="max-width:320px">{{ c.summary }}</td>
+  <td class="row">
+    <button class="btn btn--ghost btn--sm" data-edit='{{ c | tojson }}' data-modal-open="categoryModal">Edit</button>
+    <form method="post" action="{{ url_for('admin.scam_category_delete', category_id=c.id) }}" data-confirm="Delete this category?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn--danger btn--sm">Delete</button></form>
+  </td>
+</tr>
+{% else %}<tr><td colspan="5" class="dim">No categories yet.</td></tr>{% endfor %}
+</tbody></table></div>
+<button class="btn btn--primary mt-2" data-modal-open="categoryModal" data-edit-reset>Add category</button>
+
+<div class="modal-backdrop" id="categoryModal" role="dialog" aria-modal="true" aria-hidden="true">
+ <div class="modal"><div class="modal__head"><h3>Scam category</h3><button class="modal__close" data-modal-close aria-label="Close">&times;</button></div>
+  <form method="post" action="{{ url_for('admin.scam_category_save') }}" data-edit-form>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id">
+    {% for field in ['slug','name','icon','summary'] %}
+      <div class="form-group"><label for="c_{{ field }}">{{ field | replace('_',' ') | capitalize }}</label>
+        <input class="input" id="c_{{ field }}" name="{{ field }}" required></div>
+    {% endfor %}
+    {% for field in ['what_is_it','how_it_works','warning_signs','example_text','stay_safe','if_targeted'] %}
+      <div class="form-group"><label for="c_{{ field }}">{{ field | replace('_',' ') | capitalize }}</label>
+        <textarea class="input" id="c_{{ field }}" name="{{ field }}" required></textarea></div>
+    {% endfor %}
+    <div class="form-group"><label for="c_risk_level">Risk level</label>
+      <select class="input" id="c_risk_level" name="risk_level">
+        {% for r in ['low','medium','high','critical'] %}<option value="{{ r }}">{{ r | capitalize }}</option>{% endfor %}
+      </select></div>
+    <button class="btn btn--primary btn--block" type="submit">Save category</button>
+  </form>
+ </div></div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Pre-Test{% endblock %}
+{% block description %}Measure where your awareness stands today before you begin learning.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3.6rem 0 2rem">
+  <div class="container">
+    <span class="eyebrow">Awareness pre-test</span>
+    <h1>Cybersecurity Awareness Pre-Test</h1>
+    <p class="hero__lead">Measure where your awareness stands today before you begin learning.</p>
+    {% if session_user.role != 'user' %}
+      <p class="hint">You can take the test without an account, but results are saved only for signed-in users.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container quiz-shell" id="quizShell">
+    <div class="card mb-2">
+      <div class="row row--between">
+        <strong id="quizCounter">Question 1</strong>
+        <span class="muted">{{ questions | length }} questions · no time limit</span>
+      </div>
+      <div class="progress mt-1"><div class="progress__bar" id="quizProgress"></div></div>
+    </div>
+
+    <form method="post" id="quizForm" action="{{ url_for('quiz.pre_test') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% for q in questions %}
+        <div class="quiz-card card {{ 'is-active' if loop.first }}">
+          <span class="eyebrow">Question {{ loop.index }}</span>
+          <h2 style="font-size:1.3rem">{{ q.question }}</h2>
+          <div class="mt-2" role="radiogroup" aria-label="{{ q.question }}">
+            {% for o in q.options %}
+              <label class="option">
+                <input type="radio" name="q{{ q.id }}" value="{{ o.id }}">
+                <span>{{ o.option_text }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <p class="empty-state">No questions have been published for this test yet.</p>
+      {% endfor %}
+
+      <div class="row mt-2">
+        <button class="btn btn--ghost" type="button" id="quizPrev">Previous</button>
+        <button class="btn btn--primary" type="button" id="quizNext">Next question</button>
+        <button class="btn btn--primary" type="submit" id="quizSubmit" hidden>Submit and see result</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}" defer></script>
+{% endblock %}

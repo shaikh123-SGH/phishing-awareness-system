@@ -1,0 +1,7 @@
+{# Flask flash messages are handed to main.js which renders animated toasts. #}
+<div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <span data-flash hidden data-category="{{ category }}" data-message="{{ message }}"></span>
+  {% endfor %}
+{% endwith %}

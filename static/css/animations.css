@@ -1,0 +1,299 @@
+/* ==========================================================================
+   animations.css - all keyframes, scroll reveal states and motion helpers
+   ========================================================================== */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(38px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-out-left {
+  to {
+    opacity: 0;
+    transform: translateX(-38px);
+  }
+}
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ripple {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 230, 197, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(46, 230, 197, 0);
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shimmer {
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* page load */
+.page-enter {
+  animation: fade-in 0.5s ease both;
+}
+.hero__inner > * {
+  animation: fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero__inner > *:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+/* scroll reveal - JS adds .is-visible via IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal--left {
+  transform: translateX(-34px);
+}
+.reveal--right {
+  transform: translateX(34px);
+}
+.reveal--scale {
+  transform: scale(0.94);
+}
+.reveal--left.is-visible,
+.reveal--right.is-visible,
+.reveal--scale.is-visible {
+  transform: none;
+}
+[data-reveal-delay="1"] {
+  transition-delay: 0.08s;
+}
+[data-reveal-delay="2"] {
+  transition-delay: 0.16s;
+}
+[data-reveal-delay="3"] {
+  transition-delay: 0.24s;
+}
+[data-reveal-delay="4"] {
+  transition-delay: 0.32s;
+}
+[data-reveal-delay="5"] {
+  transition-delay: 0.4s;
+}
+[data-reveal-delay="6"] {
+  transition-delay: 0.48s;
+}
+
+/* result feedback */
+.result-pop {
+  animation: pop-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.result-shake {
+  animation: shake 0.5s ease;
+}
+.pulse-cta {
+  animation: pulse-glow 2.6s infinite;
+}
+
+/* chart bars */
+.chart-bar {
+  transform-origin: bottom;
+  animation: bar-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* loading */
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(126, 156, 214, 0.2);
+  border-top-color: var(--accent);
+  animation: spinner 0.8s linear infinite;
+  margin: 0 auto;
+}
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 11, 22, 0.75);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  z-index: 400;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s;
+}
+.loading-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(126, 156, 214, 0.08) 25%,
+    rgba(126, 156, 214, 0.18) 37%,
+    rgba(126, 156, 214, 0.08) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 10px;
+}
+
+/* filtering */
+.filter-hide {
+  animation: fade-in 0.2s ease reverse both;
+  display: none;
+}
+.filter-show {
+  animation: scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* count-up numbers keep layout stable */
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

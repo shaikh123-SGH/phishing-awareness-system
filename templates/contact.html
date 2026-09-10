@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Contact &amp; Feedback{% endblock %}
+{% block description %}Share feedback about the awareness programme, rate the material and suggest improvements.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow">Feedback</span>
+    <h1>Tell us what helped and what didn't</h1>
+    <p class="hero__lead">Your feedback shapes the next session. Please do not include any personal financial details.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container quiz-shell">
+    <form class="card" method="post" action="{{ url_for('main.contact') }}" data-loading novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+      <div class="form-group">
+        <label for="name">Full name</label>
+        <input class="input {{ 'has-error' if errors.name }}" id="name" name="name" maxlength="100" required
+               value="{{ data.name or session_user.name or '' }}">
+        {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email <span class="hint">(optional)</span></label>
+        <input class="input {{ 'has-error' if errors.email }}" id="email" name="email" type="email"
+               maxlength="120" value="{{ data.email or '' }}">
+        {% if errors.email %}<span class="field-error">{{ errors.email }}</span>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="rating">How useful was the platform?</label>
+        <select class="input {{ 'has-error' if errors.rating }}" id="rating" name="rating" required>
+          <option value="">Choose a rating</option>
+          {% for value, label in [(5,'5 - Extremely useful'),(4,'4 - Very useful'),(3,'3 - Useful'),(2,'2 - Somewhat useful'),(1,'1 - Not useful')] %}
+            <option value="{{ value }}" {{ 'selected' if data.rating == value }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.rating %}<span class="field-error">{{ errors.rating }}</span>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="message">Your feedback</label>
+        <textarea class="input {{ 'has-error' if errors.message }}" id="message" name="message" maxlength="1500"
+                  required placeholder="What was clearest? What was confusing?">{{ data.message or '' }}</textarea>
+        {% if errors.message %}<span class="field-error">{{ errors.message }}</span>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="suggestions">Suggestions <span class="hint">(optional)</span></label>
+        <textarea class="input" id="suggestions" name="suggestions" maxlength="1000"
+                  placeholder="What should we add for the next session?">{{ data.suggestions or '' }}</textarea>
+      </div>
+
+      <p class="hint">Never include passwords, OTPs, PINs, card numbers or account numbers in this form.</p>
+      <button class="btn btn--primary btn--block mt-1" type="submit">Submit feedback</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

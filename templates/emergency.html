@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}I Think I Got Scammed{% endblock %}
+{% block description %}Five ordered steps to take immediately if you have been scammed: stop, contact your bank, secure accounts, preserve evidence and report officially.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow" style="color:#ff9aab;background:rgba(255,92,116,0.1);border-color:rgba(255,92,116,0.3)">
+      {{ ico.icon('sos', 14) }} Emergency guidance
+    </span>
+    <h1>I think I got scammed</h1>
+    <p class="hero__lead">Take a breath. The first hour matters more than anything else. Work through these steps in order.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container quiz-shell">
+    <ol class="step-list">
+      <li class="reveal">
+        <h2>Stop all further communication and payment</h2>
+        <p>Do not send another rupee, do not share any more information, and do not continue the conversation — not even to argue or to try to recover the money. Continuing is exactly what a second-stage scam depends on.</p>
+      </li>
+      <li class="reveal">
+        <h2>Contact your bank or payment provider immediately</h2>
+        <p>If money is involved, call the number printed on your card, your passbook or the official app. Ask them to block the card, freeze the account or raise a dispute on the transaction. Note the complaint reference they give you.</p>
+      </li>
+      <li class="reveal">
+        <h2>Secure the affected accounts</h2>
+        <p>From a different, clean device, change the passwords of the affected accounts and your email. Sign out of all active sessions, enable two-factor authentication, and remove any app the fraudster asked you to install.</p>
+      </li>
+      <li class="reveal">
+        <h2>Preserve the evidence</h2>
+        <p>Take screenshots of the messages, chat threads, caller number, web address, transaction IDs, amounts and timestamps before anything is deleted. Keep them together in one folder; you will need them for both the bank dispute and the official complaint.</p>
+      </li>
+      <li class="reveal">
+        <h2>Report through official cybercrime channels</h2>
+        <p>File a complaint with the official cybercrime reporting channel and, where applicable, the local police, using the evidence you collected. Report as early as possible — the speed of reporting has a direct effect on whether a transaction can be held or reversed.</p>
+      </li>
+    </ol>
+
+    <div class="card mt-3 reveal" style="border-color:rgba(255,182,72,0.35)">
+      <h2>Also worth doing</h2>
+      <ul class="tip-list tip-list--warn">
+        <li>Tell someone you trust. Embarrassment is the main reason scams go unreported.</li>
+        <li>Warn your contacts if your account may have been used to message them.</li>
+        <li>Check your statements for the next few weeks for further unauthorised activity.</li>
+        <li>Review which apps and permissions exist on your phone and remove anything unfamiliar.</li>
+      </ul>
+    </div>
+
+    <div class="disclaimer mt-3">
+      <strong>Important:</strong> this platform is an awareness and educational project. It cannot investigate
+      incidents, contact banks on your behalf or recover money, and it does not replace official
+      authorities or professional investigation. Always use the official helpline and reporting channels
+      applicable in your country.
+    </div>
+
+    <div class="row mt-3">
+      <a class="btn btn--primary" href="{{ url_for('main.awareness') }}">Understand what happened</a>
+      <a class="btn btn--ghost" href="{{ url_for('main.contact') }}">Share your experience with us</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

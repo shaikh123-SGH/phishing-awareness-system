@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Scam Example Library{% endblock %}
+{% block description %}A searchable library of fictional scam and safe messages across SMS, email, chat, calls, web pages and payment requests.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow">Example library</span>
+    <h1>Real-looking messages, entirely fictional</h1>
+    <p class="hero__lead">
+      Study the wording, the sender and the request. Every example below was written for training —
+      none of them reference a real person, account or organisation.
+    </p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <form class="filter-bar" method="get" action="{{ url_for('main.scams') }}" role="search">
+      <label class="visually-hidden" for="exampleSearch">Search examples</label>
+      <input class="input" style="max-width:300px" type="search" id="exampleSearch" name="q" value="{{ search }}"
+             placeholder="Search wording or sender" data-filter-input data-filter-target="[data-example-card]">
+      <button class="btn btn--ghost btn--sm" type="submit">{{ ico.icon('search', 15) }} Search</button>
+      {% for value, label in [('','All channels'),('sms','SMS'),('email','Email'),('whatsapp','Chat'),('call','Call'),('webpage','Web page'),('payment','Payment')] %}
+        <span class="chip {{ 'is-active' if channel == value }}" data-filter-chip data-filter-group="channel" data-filter-value="{{ value }}">{{ label }}</span>
+      {% endfor %}
+    </form>
+
+    <div class="grid grid--2">
+      {% for e in examples %}
+        <article class="card reveal" data-reveal-delay="{{ loop.index0 % 2 + 1 }}" data-example-card
+                 data-filter-item="channel" data-filter-key="{{ e.channel }}"
+                 data-search="{{ e.sender }} {{ e.subject }} {{ e.body }} {{ e.category_name }}">
+          <div class="message-mock">
+            <div class="message-mock__head">
+              <span class="message-mock__avatar">{{ e.sender[0] | upper }}</span>
+              <div class="message-mock__meta">
+                <strong>{{ e.sender }}</strong>
+                <span>{{ e.subject or e.channel | capitalize }}</span>
+              </div>
+              <span class="channel-tag">{{ e.channel }}</span>
+            </div>
+            <div class="message-mock__body">{{ e.body }}</div>
+          </div>
+          <div class="card__foot">
+            <span class="badge {{ 'badge--danger' if e.is_scam else 'badge--safe' }}">{{ 'Scam' if e.is_scam else 'Safe' }}</span>
+            {% if e.category_slug %}<a href="{{ url_for('main.scam_detail', slug=e.category_slug) }}">{{ e.category_name }} →</a>{% endif %}
+          </div>
+          <p class="mt-1 mb-0" style="font-size:0.9rem">{{ e.explanation }}</p>
+        </article>
+      {% endfor %}
+    </div>
+    <p class="empty-state" data-empty-state hidden>No examples match your search.</p>
+
+    <div class="text-center mt-3">
+      <a class="btn btn--primary" href="{{ url_for('quiz.spot_scam') }}">Test yourself instead</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

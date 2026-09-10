@@ -1,0 +1,81 @@
+{% extends 'admin/base_admin.html' %} {% block title %}Dashboard{% endblock %}{%
+block heading %}Dashboard{% endblock %} {% block content %}
+<div class="grid grid--4">
+  {% for label, value in [('Registered users', stats.users), ('Quiz attempts',
+  stats.attempts), ('Published videos', stats.videos), ('Feedback received',
+  stats.feedback)] %}
+  <div class="stat-card reveal" data-reveal-delay="{{ loop.index0 }}">
+    <span class="dim">{{ label }}</span>
+    <h2 class="counter" data-count="{{ value }}">0</h2>
+  </div>
+  {% endfor %}
+</div>
+<div class="grid grid--2 mt-2">
+  <div class="stat-card">
+    <span class="dim">Average pre-test score</span>
+    <h2>{{ stats.avg_pre }}%</h2>
+    <div class="progress mt-1">
+      <div
+        class="progress__bar progress__bar--warn"
+        data-progress="{{ stats.avg_pre }}"
+      ></div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="dim">Average post-test score</span>
+    <h2>{{ stats.avg_post }}%</h2>
+    <div class="progress mt-1">
+      <div
+        class="progress__bar progress__bar--safe"
+        data-progress="{{ stats.avg_post }}"
+      ></div>
+    </div>
+  </div>
+</div>
+<div class="grid grid--2 mt-2">
+  <div class="card">
+    <h3>Newest users</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in recent_users %}
+          <tr>
+            <td>{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.created_at | fmt_date }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="3" class="dim">No users yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Latest feedback</h3>
+    {% for f in recent_feedback %}
+    <div class="card mb-1">
+      <strong>{{ f.name }}</strong>
+      <span class="badge badge--muted">{{ f.rating }}/5</span>
+      <p class="mb-0 muted">{{ f.message }}</p>
+    </div>
+    {% else %}
+    <p class="dim">No feedback yet.</p>
+    {% endfor %}
+  </div>
+</div>
+<div class="row mt-2">
+  <a class="btn btn--primary" href="{{ url_for('admin.reports') }}"
+    >Open reports &amp; analytics</a
+  >
+</div>
+{% endblock %}

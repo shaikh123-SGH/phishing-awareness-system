@@ -1,0 +1,29 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Users{% endblock %}{% block heading %}Registered users{% endblock %}
+{% block content %}
+<form class="filter-bar" method="get" role="search">
+  <input class="input" style="max-width:280px" type="search" name="q" value="{{ search }}" placeholder="Search name or email">
+  <button class="btn btn--ghost btn--sm" type="submit">Search</button>
+</form>
+<div class="table-wrap"><table><thead>
+<tr><th>Name</th><th>Email</th><th>City</th><th>Attempts</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
+</thead><tbody>
+{% for u in users %}
+<tr>
+  <td>{{ u.full_name }}</td><td>{{ u.email }}</td><td>{{ u.city or '—' }}</td><td>{{ u.attempts }}</td>
+  <td><span class="badge {{ 'badge--safe' if u.is_active else 'badge--danger' }}">{{ 'Active' if u.is_active else 'Disabled' }}</span></td>
+  <td>{{ u.created_at | fmt_date }}</td>
+  <td class="row">
+    <form method="post" action="{{ url_for('admin.user_toggle', user_id=u.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn btn--ghost btn--sm" type="submit">{{ 'Disable' if u.is_active else 'Enable' }}</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.user_delete', user_id=u.id) }}" data-confirm="Delete this user and all their attempts?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn btn--danger btn--sm" type="submit">Delete</button>
+    </form>
+  </td>
+</tr>
+{% else %}<tr><td colspan="7" class="dim">No users found.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

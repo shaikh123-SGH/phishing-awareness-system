@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Cyber Safety Learning Centre{% endblock %}
+{% block description %}Practical safety habits for passwords, OTPs, UPI, mobile, email, browsing, social media, shopping and phone calls.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow">Cyber safety centre</span>
+    <h1>Nine habits that protect everything else</h1>
+    <p class="hero__lead">Open any card for a short, practical checklist you can apply the same day.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="grid grid--3">
+      {% for t in topics %}
+        <article class="card card--hover reveal" data-reveal-delay="{{ loop.index0 % 3 + 1 }}"
+                 data-detail-modal="topic{{ t.id }}" tabindex="0" role="button"
+                 aria-label="Open safety tips for {{ t.title }}">
+          <div class="card__icon">{{ ico.icon(t.icon) }}</div>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.summary }}</p>
+          <div class="card__foot"><span class="muted">{{ t.tips | lines | length }} practical tips →</span></div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% for t in topics %}
+<div class="modal-backdrop" id="topic{{ t.id }}" role="dialog" aria-modal="true" aria-hidden="true"
+     aria-labelledby="topic{{ t.id }}Title">
+  <div class="modal">
+    <div class="modal__head">
+      <div>
+        <span class="eyebrow">{{ ico.icon(t.icon, 14) }} Safety centre</span>
+        <h3 id="topic{{ t.id }}Title">{{ t.title }}</h3>
+      </div>
+      <button class="modal__close" data-modal-close aria-label="Close">&times;</button>
+    </div>
+    <p>{{ t.summary }}</p>
+    <ul class="tip-list">
+      {% for tip in t.tips | lines %}<li>{{ tip }}</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

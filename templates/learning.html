@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Guided Learning Path{% endblock %}
+{% block description %}Work through scam briefings, safety habits, videos and checklists between the pre-test and the post-test.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3.6rem 0 2rem">
+  <div class="container">
+    <span class="eyebrow">Awareness learning</span>
+    <h1>Your guided learning path</h1>
+    <p class="hero__lead">Read the briefings, watch a few videos, then take the post-test. Briefings you have already opened are marked as done.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <h2 class="reveal">Step 1 · Scam briefings</h2>
+    <div class="grid grid--4 mt-2">
+      {% for c in categories %}
+        <a class="card card--hover reveal" data-reveal-delay="{{ loop.index0 % 4 + 1 }}" href="{{ url_for('main.scam_detail', slug=c.slug) }}">
+          <div class="card__icon">{{ ico.icon(c.icon) }}</div>
+          <h3>{{ c.name }}</h3>
+          <p>{{ c.summary }}</p>
+          <div class="card__foot">
+            <span class="badge {{ 'badge--safe' if loop.index in done else 'badge--muted' }}">
+              {{ 'Completed' if loop.index in done else 'Not read yet' }}
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <h2 class="mt-3 reveal">Step 2 · Safety habits</h2>
+    <div class="grid grid--3 mt-2">
+      {% for t in topics %}
+        <a class="card card--hover reveal" href="{{ url_for('main.safety_center') }}#{{ t.slug }}">
+          <div class="card__icon">{{ ico.icon(t.icon) }}</div>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.summary }}</p>
+        </a>
+      {% endfor %}
+    </div>
+
+    <h2 class="mt-3 reveal">Step 3 · Watch</h2>
+    <div class="grid grid--4 mt-2">
+      {% for v in videos %}
+        <article class="card card--hover reveal" tabindex="0" role="button"
+                 data-video-id="{{ v.youtube_id }}" data-video-db-id="{{ v.id }}" data-video-title="{{ v.title }}">
+          <div class="video-frame" style="margin-bottom:0.7rem">
+            <img src="{{ v.thumbnail_url }}" alt="Thumbnail for {{ v.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <h3 style="font-size:1rem">{{ v.title }}</h3>
+        </article>
+      {% endfor %}
+    </div>
+
+    <h2 class="mt-3 reveal">Step 4 · Read and keep</h2>
+    <div class="grid grid--3 mt-2">
+      {% for r in resources %}
+        <a class="card card--hover reveal" href="{{ url_for('main.resources') }}">
+          <div class="card__icon">{{ ico.icon('file') }}</div>
+          <span class="badge badge--muted">{{ r.resource_type }}</span>
+          <h3 class="mt-1">{{ r.title }}</h3>
+          <p>{{ r.summary }}</p>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="card text-center mt-3 reveal" style="padding:2.2rem">
+      <h2>Ready to measure your improvement?</h2>
+      <a class="btn btn--primary mt-1" href="{{ url_for('quiz.post_test') }}">Take the post-test</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

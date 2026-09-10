@@ -1,0 +1,37 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Resources{% endblock %}{% block heading %}Learning resources{% endblock %}
+{% block content %}
+<div class="table-wrap"><table><thead><tr><th>Title</th><th>Type</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for r in resources %}
+<tr>
+  <td>{{ r.title }}</td><td>{{ r.resource_type }}</td><td>{{ r.category_name or '—' }}</td>
+  <td><span class="badge {{ 'badge--safe' if r.is_published else 'badge--muted' }}">{{ 'Published' if r.is_published else 'Draft' }}</span></td>
+  <td class="row">
+    <button class="btn btn--ghost btn--sm" data-edit='{{ r | tojson }}' data-modal-open="resourceModal">Edit</button>
+    <form method="post" action="{{ url_for('admin.resource_delete', resource_id=r.id) }}" data-confirm="Delete this resource?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn--danger btn--sm">Delete</button></form>
+  </td>
+</tr>
+{% else %}<tr><td colspan="5" class="dim">No resources yet.</td></tr>{% endfor %}
+</tbody></table></div>
+<button class="btn btn--primary mt-2" data-modal-open="resourceModal" data-edit-reset>Add resource</button>
+
+<div class="modal-backdrop" id="resourceModal" role="dialog" aria-modal="true" aria-hidden="true">
+ <div class="modal"><div class="modal__head"><h3>Resource</h3><button class="modal__close" data-modal-close aria-label="Close">&times;</button></div>
+  <form method="post" action="{{ url_for('admin.resource_save') }}" data-edit-form>
+   <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id">
+   <div class="form-group"><label for="r_title">Title</label><input class="input" id="r_title" name="title" required></div>
+   <div class="form-group"><label for="r_resource_type">Type</label>
+     <select class="input" id="r_resource_type" name="resource_type">
+       {% for t in ['article','checklist','infographic','poster','tip'] %}<option value="{{ t }}">{{ t }}</option>{% endfor %}</select></div>
+   <div class="form-group"><label for="r_category_id">Category</label>
+     <select class="input" id="r_category_id" name="category_id"><option value="">None</option>
+       {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div>
+   <div class="form-group"><label for="r_summary">Summary</label><textarea class="input" id="r_summary" name="summary" required></textarea></div>
+   <div class="form-group"><label for="r_content">Content</label><textarea class="input" id="r_content" name="content" rows="10" required></textarea></div>
+   <div class="form-group"><label for="r_is_published">Status</label>
+     <select class="input" id="r_is_published" name="is_published"><option value="1">Published</option><option value="0">Draft</option></select></div>
+   <button class="btn btn--primary btn--block" type="submit">Save resource</button>
+  </form>
+ </div></div>
+{% endblock %}

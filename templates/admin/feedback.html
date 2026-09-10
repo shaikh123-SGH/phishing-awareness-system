@@ -1,0 +1,64 @@
+{% extends 'admin/base_admin.html' %} {% block title %}Feedback{% endblock %}{%
+block heading %}Community feedback{% endblock %} {% block content %}
+<div class="stat-card mb-2">
+  <span class="dim">Average rating</span>
+  <h2>{{ average }} / 5</h2>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Rating</th>
+        <th>Message</th>
+        <th>Suggestions</th>
+        <th>Received</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in feedback %}
+      <tr>
+        <td>
+          {{ f.name }}{% if not f.is_read %}
+          <span class="badge badge--warn">New</span>{% endif %}
+        </td>
+        <td>{{ f.email or '—' }}</td>
+        <td>{{ f.rating }}/5</td>
+        <td style="max-width: 320px">{{ f.message }}</td>
+        <td style="max-width: 240px">{{ f.suggestions or '—' }}</td>
+        <td>{{ f.created_at | fmt_date }}</td>
+        <td class="row">
+          {% if not f.is_read %}
+          <form
+            method="post"
+            action="{{ url_for('admin.feedback_read', feedback_id=f.id) }}"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <button class="btn btn--ghost btn--sm" type="submit">
+              Mark read
+            </button>
+          </form>
+          {% endif %}
+          <form
+            method="post"
+            action="{{ url_for('admin.feedback_delete', feedback_id=f.id) }}"
+            data-confirm="Delete this feedback?"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <button class="btn btn--danger btn--sm" type="submit">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="dim">No feedback yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

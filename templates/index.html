@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Think Before You Click{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <div>
+      <span class="eyebrow">{{ ico.icon('shield', 14) }} Community Cyber Awareness Initiative</span>
+      <h1>Think Before <span class="accent">You Click.</span></h1>
+      <p class="hero__lead">
+        Learn to identify phishing, scams and online fraud before they become a threat.
+        Practise on realistic fictional messages, measure your awareness, and know exactly
+        what to do if you are ever targeted.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="{{ url_for('main.awareness') }}">{{ ico.icon('book', 18) }} Learn About Scams</a>
+        <a class="btn btn--ghost pulse-cta" href="{{ url_for('quiz.spot_scam') }}">{{ ico.icon('search', 18) }} Spot the Scam</a>
+        <a class="btn btn--ghost" href="{{ url_for('quiz.pre_test') }}">{{ ico.icon('check', 18) }} Take Awareness Quiz</a>
+      </div>
+      <div class="hero__stats">
+        <div class="hero__stat"><strong class="counter" data-count="{{ stats.categories }}">0</strong><span>Scam types explained</span></div>
+        <div class="hero__stat"><strong class="counter" data-count="{{ stats.examples }}">0</strong><span>Practice messages</span></div>
+        <div class="hero__stat"><strong class="counter" data-count="{{ stats.videos }}">0</strong><span>Awareness videos</span></div>
+        <div class="hero__stat"><strong class="counter" data-count="{{ stats.learners }}">0</strong><span>Registered learners</span></div>
+      </div>
+    </div>
+
+    <div class="shield-visual" aria-hidden="true">
+      <span class="shield-visual__ring"></span>
+      <span class="shield-visual__ring"></span>
+      <span class="shield-visual__ring"></span>
+      <div class="shield-visual__core">{{ ico.icon('shield', 58) }}</div>
+      <span class="shield-visual__chip c1"><span class="dot"></span> Suspicious link blocked</span>
+      <span class="shield-visual__chip c2"><span class="dot dot--warn"></span> OTP request detected</span>
+      <span class="shield-visual__chip c3"><span class="dot dot--safe"></span> Verified sender</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ------------------------------------------------ why awareness matters -->
+<section class="section" id="why">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why it matters</span>
+      <h2>Most online fraud succeeds because of one missed warning sign</h2>
+      <p>
+        Scams rarely rely on advanced hacking. They rely on urgency, trust and a moment of distraction.
+        A message that threatens account closure, an offer that expires in minutes, a caller who
+        sounds official — each is designed to stop you from checking. Awareness closes that gap.
+      </p>
+    </div>
+
+    <div class="grid grid--3">
+      <article class="card reveal" data-reveal-delay="1">
+        <div class="card__icon">{{ ico.icon('alert') }}</div>
+        <h3>Pressure is the weapon</h3>
+        <p>Fraud messages create panic or excitement so you act before verifying. Recognising that pressure is itself the defence.</p>
+      </article>
+      <article class="card reveal" data-reveal-delay="2">
+        <div class="card__icon">{{ ico.icon('users') }}</div>
+        <h3>Anyone can be targeted</h3>
+        <p>Students, homemakers, shopkeepers and professionals are all approached. Losses come from missing a signal, not from a lack of intelligence.</p>
+      </article>
+      <article class="card reveal" data-reveal-delay="3">
+        <div class="card__icon">{{ ico.icon('check') }}</div>
+        <h3>Prevention is learnable</h3>
+        <p>A short list of habits — verify the sender, never share codes, check the address — prevents the majority of everyday scams.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------- common scams -->
+<section class="section" id="scams">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <span class="eyebrow">Common scams</span>
+      <h2>Know the twelve patterns behind almost every online fraud</h2>
+      <p>Select any card to open a detailed briefing with warning signs, a fictional example and safety steps.</p>
+    </div>
+
+    <div class="grid grid--4">
+      {% for c in categories %}
+        <a class="card card--hover reveal" data-reveal-delay="{{ loop.index0 % 4 + 1 }}"
+           href="{{ url_for('main.scam_detail', slug=c.slug) }}" aria-label="Read about {{ c.name }}">
+          <div class="card__icon">{{ ico.icon(c.icon) }}</div>
+          <h3>{{ c.name }}</h3>
+          <p>{{ c.summary }}</p>
+          <div class="card__foot">
+            <span class="badge badge--{{ c.risk_level }}">{{ c.risk_level }} risk</span>
+            <span class="muted">Read briefing →</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------ safety rules -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Quick safety rules</span>
+      <h2>Seven rules that stop most scams</h2>
+    </div>
+    <div class="grid grid--3">
+      {% set rules = [
+        ('key', 'Never share an OTP', 'No bank, wallet or delivery agent ever needs the code sent to your phone.'),
+        ('lock', 'Never share a PIN or password', 'A PIN authorises money leaving your account. Nobody else needs it, ever.'),
+        ('globe', 'Verify links before clicking', 'Read the domain carefully, or type the address yourself instead of tapping.'),
+        ('alert', 'Distrust urgent payment requests', 'Urgency is the pressure tactic. Genuine organisations allow you to verify.'),
+        ('headset', 'Verify customer-care numbers', 'Take support numbers only from the official app, website or your bill.'),
+        ('search', 'Check website addresses carefully', 'One extra word or hyphen in a domain is the difference between real and fake.'),
+        ('shield', 'Never install unknown apps', 'Install only from official stores, and never because a caller asked you to.')
+      ] %}
+      {% for icon_name, title, text in rules %}
+        <article class="card reveal" data-reveal-delay="{{ loop.index0 % 3 + 1 }}">
+          <div class="card__icon">{{ ico.icon(icon_name) }}</div>
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- videos -->
+<section class="section">
+  <div class="container">
+    <div class="row row--between reveal mb-2">
+      <div class="section-head" style="margin-bottom:0">
+        <span class="eyebrow">Latest awareness videos</span>
+        <h2>Watch, then practise</h2>
+      </div>
+      <a class="btn btn--ghost" href="{{ url_for('main.videos') }}">View all videos</a>
+    </div>
+
+    <div class="grid grid--3">
+      {% for v in videos %}
+        <article class="card card--hover reveal" data-reveal-delay="{{ loop.index }}" tabindex="0" role="button"
+                 data-video-id="{{ v.youtube_id }}" data-video-db-id="{{ v.id }}"
+                 data-video-title="{{ v.title }}" data-video-description="{{ v.description }}">
+          <div class="video-frame" style="aspect-ratio:16/9;margin-bottom:0.9rem">
+            <img src="{{ v.thumbnail_url }}" alt="Thumbnail for the video {{ v.title }}"
+                 loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <h3>{{ v.title }}</h3>
+          <p>{{ v.description }}</p>
+          <div class="card__foot"><span class="badge badge--muted">{{ ico.icon('play', 12) }} Play</span></div>
+        </article>
+      {% else %}
+        <p class="dim">No videos have been published yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ---------------------------------------------------- spot the scam CTA -->
+<section class="section--tight">
+  <div class="container">
+    <div class="card reveal reveal--scale" style="padding:2.6rem;background:var(--gradient-hero);border-color:var(--border-strong)">
+      <div class="grid grid--2" style="align-items:center">
+        <div>
+          <span class="eyebrow">Interactive exercise</span>
+          <h2>Can you tell a scam from a genuine message?</h2>
+          <p>
+            Thirteen fictional messages — SMS, email, chat, payment requests and fake pages.
+            Choose SAFE or SCAM, see the warning signs immediately, and get a score at the end.
+          </p>
+          <div class="row mt-2">
+            <a class="btn btn--primary" href="{{ url_for('quiz.spot_scam') }}">Start Spot the Scam</a>
+            <a class="btn btn--ghost" href="{{ url_for('main.scams') }}">Browse the example library</a>
+          </div>
+        </div>
+        <div class="message-mock reveal reveal--right">
+          <div class="message-mock__head">
+            <span class="message-mock__avatar">B</span>
+            <div class="message-mock__meta">
+              <strong>+91 98XXXXXX21</strong>
+              <span>Today, 9:14 pm</span>
+            </div>
+            <span class="channel-tag">SMS</span>
+          </div>
+          <div class="message-mock__body">Your bank account will be blocked today. Click here to verify your account: http://verify-account-secure.example</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- quiz CTA -->
+<section class="section">
+  <div class="container grid grid--2">
+    <article class="card reveal" style="padding:2rem">
+      <span class="eyebrow">Measure</span>
+      <h2>Awareness Quiz</h2>
+      <p>
+        Take the pre-test to see where you stand, work through the learning path, then take the
+        post-test. Your improvement is calculated automatically and saved to your profile.
+      </p>
+      <div class="row mt-2">
+        <a class="btn btn--primary" href="{{ url_for('quiz.pre_test') }}">Start Pre-Test</a>
+        <a class="btn btn--ghost" href="{{ url_for('quiz.post_test') }}">Take Post-Test</a>
+      </div>
+    </article>
+    <article class="card reveal" data-reveal-delay="2" style="padding:2rem;border-color:rgba(255,92,116,0.35)">
+      <span class="eyebrow" style="color:#ff9aab;background:rgba(255,92,116,0.1);border-color:rgba(255,92,116,0.3)">
+        {{ ico.icon('sos', 14) }} Emergency guidance
+      </span>
+      <h2>I think I got scammed</h2>
+      <p>
+        Acting in the first hour matters more than anything else. Follow five clear steps to stop
+        the loss, secure your accounts, preserve evidence and report through official channels.
+      </p>
+      <a class="btn btn--danger mt-2" href="{{ url_for('main.emergency') }}">Open emergency steps</a>
+    </article>
+  </div>
+</section>
+{% endblock %}

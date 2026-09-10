@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Video Awareness Centre{% endblock %}
+{% block description %}Curated awareness videos on phishing, OTP safety, UPI safety, scam calls and safe browsing.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow">Video awareness centre</span>
+    <h1>Watch, then apply</h1>
+    <p class="hero__lead">Videos open in a player on this page. Administrators can add new videos at any time without changing the website code.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <form class="filter-bar" method="get" action="{{ url_for('main.videos') }}" role="search">
+      <label class="visually-hidden" for="videoSearch">Search videos</label>
+      <input class="input" style="max-width:300px" type="search" id="videoSearch" name="q" value="{{ search }}"
+             placeholder="Search videos" data-filter-input data-filter-target="[data-video-card]">
+      <label class="visually-hidden" for="videoCategory">Filter by category</label>
+      <select class="input" style="max-width:230px" id="videoCategory" name="category" onchange="this.form.submit()">
+        <option value="">All categories</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}" {{ 'selected' if category_id == c.id | string }}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn--ghost btn--sm" type="submit">{{ ico.icon('search', 15) }} Search</button>
+    </form>
+
+    <div class="grid grid--3">
+      {% for v in videos %}
+        <article class="card card--hover reveal" data-reveal-delay="{{ loop.index0 % 3 + 1 }}" data-video-card
+                 data-search="{{ v.title }} {{ v.description }} {{ v.category_name }}"
+                 tabindex="0" role="button" aria-label="Play {{ v.title }}"
+                 data-video-id="{{ v.youtube_id }}" data-video-db-id="{{ v.id }}"
+                 data-video-title="{{ v.title }}" data-video-description="{{ v.description }}">
+          <div class="video-frame" style="margin-bottom:0.9rem">
+            <img src="{{ v.thumbnail_url }}" alt="Thumbnail for {{ v.title }}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <h3>{{ v.title }}</h3>
+          <p>{{ v.description }}</p>
+          <div class="card__foot">
+            <span class="badge badge--muted">{{ v.category_name or 'General' }}</span>
+            <span class="muted">{{ ico.icon('play', 13) }} Play</span>
+          </div>
+        </article>
+      {% else %}
+        <p class="empty-state">No videos have been published yet.</p>
+      {% endfor %}
+    </div>
+    <p class="empty-state" data-empty-state hidden>No videos match your search.</p>
+  </div>
+</section>
+{% endblock %}

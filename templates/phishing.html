@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block description %}{{ category.summary }}{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3.6rem 0 2.4rem">
+  <div class="container">
+    <p class="dim" style="font-size:0.86rem">
+      <a href="{{ url_for('main.awareness') }}">Scam Awareness</a> / {{ category.name }}
+    </p>
+    <span class="eyebrow">{{ ico.icon(category.icon, 14) }} {{ category.risk_level }} risk</span>
+    <h1>{{ category.name }}</h1>
+    <p class="hero__lead">{{ category.summary }}</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container grid grid--2">
+    <article class="card reveal">
+      <span class="eyebrow">What is it?</span>
+      <h2>Definition</h2>
+      <p>{{ category.what_is_it }}</p>
+    </article>
+    <article class="card reveal" data-reveal-delay="2">
+      <span class="eyebrow">How does it work?</span>
+      <h2>The method</h2>
+      <p>{{ category.how_it_works }}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container grid grid--2">
+    <article class="card reveal">
+      <span class="eyebrow">Warning signs</span>
+      <h2>What to look for</h2>
+      <ul class="tip-list tip-list--danger">
+        {% for sign in category.warning_signs | lines %}<li>{{ sign }}</li>{% endfor %}
+      </ul>
+    </article>
+    <article class="card reveal" data-reveal-delay="2">
+      <span class="eyebrow">Fictional example</span>
+      <h2>How it looks in practice</h2>
+      <div class="message-mock">
+        <div class="message-mock__head">
+          <span class="message-mock__avatar">!</span>
+          <div class="message-mock__meta"><strong>Fictional sample</strong><span>Created for training</span></div>
+          <span class="channel-tag">Example</span>
+        </div>
+        <div class="message-mock__body">{{ category.example_text }}</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container grid grid--2">
+    <article class="card reveal">
+      <span class="eyebrow">How to stay safe</span>
+      <h2>Prevention</h2>
+      <ul class="tip-list">
+        {% for tip in category.stay_safe | lines %}<li>{{ tip }}</li>{% endfor %}
+      </ul>
+    </article>
+    <article class="card reveal" data-reveal-delay="2" style="border-color:rgba(255,182,72,0.32)">
+      <span class="eyebrow" style="color:#ffd08a;background:rgba(255,182,72,0.1);border-color:rgba(255,182,72,0.3)">If you are targeted</span>
+      <h2>Immediate steps</h2>
+      <ol class="step-list">
+        {% for step in category.if_targeted | lines %}<li>{{ step }}</li>{% endfor %}
+      </ol>
+      <a class="btn btn--danger" href="{{ url_for('main.emergency') }}">Full emergency guidance</a>
+    </article>
+  </div>
+</section>
+
+{% if examples %}
+<section class="section--tight">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Practice</span>
+      <h2>Related fictional messages</h2>
+    </div>
+    <div class="grid grid--2">
+      {% for e in examples %}
+        <div class="message-mock reveal" data-reveal-delay="{{ loop.index }}">
+          <div class="message-mock__head">
+            <span class="message-mock__avatar">{{ e.sender[0] | upper }}</span>
+            <div class="message-mock__meta">
+              <strong>{{ e.sender }}</strong>
+              <span>{{ e.subject or 'No subject' }}</span>
+            </div>
+            <span class="channel-tag">{{ e.channel }}</span>
+          </div>
+          <div class="message-mock__body">{{ e.body }}</div>
+          <div style="padding:0.9rem 1.1rem;border-top:1px solid var(--border)">
+            <span class="badge {{ 'badge--danger' if e.is_scam else 'badge--safe' }}">
+              {{ 'Scam' if e.is_scam else 'Safe' }}
+            </span>
+            <p class="mt-1 mb-0" style="font-size:0.88rem">{{ e.explanation }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <a class="btn btn--primary mt-3" href="{{ url_for('quiz.spot_scam') }}">Practise with the full exercise</a>
+  </div>
+</section>
+{% endif %}
+
+{% if videos %}
+<section class="section--tight">
+  <div class="container">
+    <h2 class="reveal">Related videos</h2>
+    <div class="grid grid--3 mt-2">
+      {% for v in videos %}
+        <article class="card card--hover reveal" tabindex="0" role="button"
+                 data-video-id="{{ v.youtube_id }}" data-video-db-id="{{ v.id }}" data-video-title="{{ v.title }}">
+          <div class="video-frame" style="margin-bottom:0.8rem">
+            <img src="{{ v.thumbnail_url }}" alt="Thumbnail for {{ v.title }}" loading="lazy"
+                 style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <h3>{{ v.title }}</h3>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section--tight">
+  <div class="container">
+    <h2 class="reveal">Continue learning</h2>
+    <div class="grid grid--3 mt-2">
+      {% for o in others %}
+        <a class="card card--hover reveal" data-reveal-delay="{{ loop.index }}" href="{{ url_for('main.scam_detail', slug=o.slug) }}">
+          <div class="card__icon">{{ ico.icon(o.icon) }}</div>
+          <h3>{{ o.name }}</h3>
+          <p>{{ o.summary }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

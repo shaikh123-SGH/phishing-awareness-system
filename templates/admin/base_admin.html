@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{% block title %}Admin{% endblock %} · Awareness Admin</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/favicon.svg') }}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/animations.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/responsive.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+  </head>
+  <body class="admin-body" data-csrf="{{ csrf_token }}">
+    <div class="admin-shell">
+      <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-brand">Awareness Admin</div>
+        <nav class="admin-nav">
+          {% set items =
+          [('admin.dashboard','Dashboard'),('admin.users','Users'),('admin.scam_categories','Scam
+          categories'),('admin.scam_examples','Scam
+          examples'),('admin.quizzes','Quiz
+          questions'),('admin.videos','Videos'),('admin.resources','Resources'),('admin.feedback','Feedback'),('admin.reports','Reports')]
+          %} {% for endpoint, label in items %}
+          <a
+            href="{{ url_for(endpoint) }}"
+            class="{{ 'is-active' if request.endpoint == endpoint }}"
+            >{{ label }}</a
+          >
+          {% endfor %}
+          <a href="{{ url_for('main.index') }}">View public site</a>
+        </nav>
+      </aside>
+      <div class="admin-main">
+        <header class="admin-topbar">
+          <button
+            class="admin-burger"
+            id="adminBurger"
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
+          <div>
+            <strong>{% block heading %}Dashboard{% endblock %}</strong>
+            <span class="dim"
+              >Signed in as {{ admin.name if admin else 'administrator' }}</span
+            >
+          </div>
+          <form method="post" action="{{ url_for('admin.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <button class="btn btn--ghost btn--sm" type="submit">
+              Log out
+            </button>
+          </form>
+        </header>
+        <main class="admin-content">
+          {% include 'components/flash_messages.html' %} {% block content %}{%
+          endblock %}
+        </main>
+      </div>
+    </div>
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script
+      src="{{ url_for('static', filename='js/animations.js') }}"
+      defer
+    ></script>
+    <script
+      src="{{ url_for('static', filename='js/admin.js') }}"
+      defer
+    ></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

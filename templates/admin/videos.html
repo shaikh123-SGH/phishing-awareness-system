@@ -1,0 +1,150 @@
+{% extends 'admin/base_admin.html' %} {% block title %}Videos{% endblock %}{%
+block heading %}Awareness videos{% endblock %} {% block content %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>YouTube ID</th>
+        <th>Category</th>
+        <th>Views</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in videos %}
+      <tr>
+        <td>{{ v.title }}</td>
+        <td>{{ v.youtube_id }}</td>
+        <td>{{ v.category_name or '—' }}</td>
+        <td>{{ v.views }}</td>
+        <td>
+          <span
+            class="badge {{ 'badge--safe' if v.status == 'published' else 'badge--muted' }}"
+            >{{ v.status }}</span
+          >
+        </td>
+        <td class="row">
+          <button
+            class="btn btn--ghost btn--sm"
+            data-edit="{{ v | tojson }}"
+            data-modal-open="videoModal"
+          >
+            Edit
+          </button>
+          <form
+            method="post"
+            action="{{ url_for('admin.video_toggle', video_id=v.id) }}"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <button class="btn btn--ghost btn--sm">
+              {{ 'Unpublish' if v.status == 'published' else 'Publish' }}
+            </button>
+          </form>
+          <form
+            method="post"
+            action="{{ url_for('admin.video_delete', video_id=v.id) }}"
+            data-confirm="Delete this video?"
+          >
+            <input
+              type="hidden"
+              name="csrf_token"
+              value="{{ csrf_token }}"
+            /><button class="btn btn--danger btn--sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="dim">No videos yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<button
+  class="btn btn--primary mt-2"
+  data-modal-open="videoModal"
+  data-edit-reset
+>
+  Add video
+</button>
+
+<div
+  class="modal-backdrop"
+  id="videoModal"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+>
+  <div class="modal">
+    <div class="modal__head">
+      <h3>Video</h3>
+      <button class="modal__close" data-modal-close aria-label="Close">
+        &times;
+      </button>
+    </div>
+    <form
+      method="post"
+      action="{{ url_for('admin.video_save') }}"
+      data-edit-form
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" /><input
+        type="hidden"
+        name="id"
+      />
+      <div class="form-group">
+        <label for="v_title">Title</label
+        ><input class="input" id="v_title" name="title" required />
+      </div>
+      <div class="form-group">
+        <label for="v_video_url">YouTube URL</label>
+        <input
+          class="input"
+          id="v_video_url"
+          name="video_url"
+          data-youtube-input
+          required
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+        <span class="hint"
+          >Paste any YouTube link; the video ID and thumbnail are detected
+          automatically.</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="v_description">Description</label
+        ><textarea
+          class="input"
+          id="v_description"
+          name="description"
+          required
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="v_category_id">Category</label>
+        <select class="input" id="v_category_id" name="category_id">
+          <option value="">None</option>
+          {% for c in categories %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="v_status">Status</label>
+        <select class="input" id="v_status" name="status">
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+      <div class="video-frame" id="videoPreview" hidden>
+        <img alt="Video thumbnail preview" style="width: 100%" />
+      </div>
+      <button class="btn btn--primary btn--block mt-1" type="submit">
+        Save video
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

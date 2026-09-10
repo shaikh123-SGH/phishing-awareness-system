@@ -1,0 +1,53 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <h4>About the project</h4>
+        <p class="dim" style="font-size:0.9rem">
+          A Semester 5 Community Engagement Project that helps students and community members
+          recognise phishing, online fraud and payment scams, and respond safely when targeted.
+        </p>
+        <a class="btn btn--ghost btn--sm mt-1" href="{{ url_for('main.about') }}">Read the project brief</a>
+      </div>
+      <div>
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="{{ url_for('main.awareness') }}">Scam Awareness</a></li>
+          <li><a href="{{ url_for('main.scams') }}">Scam Examples</a></li>
+          <li><a href="{{ url_for('main.safety_center') }}">Safety Centre</a></li>
+          <li><a href="{{ url_for('main.videos') }}">Awareness Videos</a></li>
+          <li><a href="{{ url_for('main.resources') }}">Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Practise</h4>
+        <ul>
+          <li><a href="{{ url_for('quiz.spot_scam') }}">Spot the Scam</a></li>
+          <li><a href="{{ url_for('quiz.pre_test') }}">Pre-Test</a></li>
+          <li><a href="{{ url_for('quiz.post_test') }}">Post-Test</a></li>
+          <li><a href="{{ url_for('quiz.learning') }}">Learning Path</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Help &amp; contact</h4>
+        <ul>
+          <li><a href="{{ url_for('main.emergency') }}">I think I got scammed</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Contact &amp; Feedback</a></li>
+          <li><a href="{{ url_for('main.about') }}#privacy">Privacy &amp; Safety Notice</a></li>
+          <li><a href="{{ url_for('admin.login') }}">Administrator login</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> This platform is created for cybersecurity awareness and educational
+      purposes. Do not enter real passwords, OTPs, PINs or financial information. Every scam example
+      shown here is fictional. This site does not replace official authorities or professional investigation.
+    </p>
+
+    <div class="footer__bottom">
+      <span>&copy; {{ current_year() }} Phishing Scam &amp; Fraud Detection Awareness Program.</span>
+      <span>Built as a Community Engagement Project.</span>
+    </div>
+  </div>
+</footer>

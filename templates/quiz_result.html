@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container quiz-shell">
+    <div class="card text-center result-pop" style="padding:2.6rem">
+      <span class="eyebrow">{{ title }}</span>
+      <h1 style="font-size:2.2rem">You scored {{ score }} out of {{ total }}</h1>
+      <div class="score-ring" data-ring="{{ percent }}" style="margin:1.6rem auto">
+        <span class="score-ring__value">{{ percent }}%</span>
+      </div>
+      <p>Awareness level: <strong>{{ level }}</strong></p>
+      <div class="grid grid--2 mt-2" style="max-width:430px;margin-inline:auto">
+        <div class="card"><span class="dim">Correct answers</span><h3>{{ score }}</h3></div>
+        <div class="card"><span class="dim">Incorrect answers</span><h3>{{ total - score }}</h3></div>
+      </div>
+
+      {% if comparison %}
+        <div class="card mt-3" style="text-align:left">
+          <span class="eyebrow">Improvement</span>
+          <h2>Pre-test vs post-test</h2>
+          <p class="mb-0">Pre-Test: <strong>{{ comparison.pre }}%</strong></p>
+          <div class="progress mt-1"><div class="progress__bar progress__bar--warn" data-progress="{{ comparison.pre }}"></div></div>
+          <p class="mt-2 mb-0">Post-Test: <strong>{{ comparison.post }}%</strong></p>
+          <div class="progress mt-1"><div class="progress__bar progress__bar--safe" data-progress="{{ comparison.post }}"></div></div>
+          <h3 class="mt-2" style="color:{{ 'var(--safe)' if comparison.improvement >= 0 else 'var(--danger)' }}">
+            Improvement: {{ '+' if comparison.improvement >= 0 }}{{ comparison.improvement }}%
+          </h3>
+        </div>
+      {% elif quiz_type == 'pre' %}
+        <p class="muted mt-2">Next step: work through the guided learning path, then take the post-test to measure your improvement.</p>
+      {% endif %}
+
+      <div class="row mt-3" style="justify-content:center">
+        {% if quiz_type == 'pre' %}
+          <a class="btn btn--primary" href="{{ url_for('quiz.learning') }}">Start the learning path</a>
+        {% else %}
+          <a class="btn btn--primary" href="{{ url_for('auth.profile') }}">View my progress</a>
+        {% endif %}
+        <a class="btn btn--ghost" href="{{ url_for('quiz.spot_scam') }}">Practise Spot the Scam</a>
+      </div>
+    </div>
+
+    <h2 class="mt-3 reveal">Answer review</h2>
+    {% for item in review %}
+      <div class="card reveal mt-2 review-item {{ 'ok' if item.is_correct else 'bad' }}">
+        <span class="badge {{ 'badge--safe' if item.is_correct else 'badge--danger' }}">
+          {{ 'Correct' if item.is_correct else 'Incorrect' }}
+        </span>
+        <h3 class="mt-1">{{ item.question }}</h3>
+        <p class="mb-0">Your answer: <strong>{{ item.chosen }}</strong></p>
+        {% if not item.is_correct %}<p class="mb-0">Correct answer: <strong>{{ item.correct }}</strong></p>{% endif %}
+        <p class="muted mt-1 mb-0">{{ item.explanation }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

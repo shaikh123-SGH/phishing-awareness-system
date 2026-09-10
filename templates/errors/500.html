@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Something went wrong{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="text-center">
+    <h1 style="font-size:4rem">500</h1>
+    <h2>Something went wrong</h2>
+    <p>{% if message %}{{ message }}{% else %}An unexpected error occurred on the server. Please try again.{% endif %}</p>
+    <a class="btn btn--primary mt-2" href="{{ url_for('main.index') }}">Back to home</a>
+  </div>
+</section>
+{% endblock %}

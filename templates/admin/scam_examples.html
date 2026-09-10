@@ -1,0 +1,44 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Scam examples{% endblock %}{% block heading %}Fictional scam examples{% endblock %}
+{% block content %}
+<div class="table-wrap"><table><thead><tr><th>Sender</th><th>Channel</th><th>Type</th><th>Difficulty</th><th>Body</th><th>Actions</th></tr></thead><tbody>
+{% for e in examples %}
+<tr>
+  <td>{{ e.sender }}</td><td>{{ e.channel }}</td>
+  <td><span class="badge {{ 'badge--danger' if e.is_scam else 'badge--safe' }}">{{ 'Scam' if e.is_scam else 'Safe' }}</span></td>
+  <td>{{ e.difficulty }}</td><td style="max-width:300px">{{ e.body }}</td>
+  <td class="row">
+    <button class="btn btn--ghost btn--sm" data-edit='{{ e | tojson }}' data-modal-open="exampleModal">Edit</button>
+    <form method="post" action="{{ url_for('admin.scam_example_delete', example_id=e.id) }}" data-confirm="Delete this example?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn--danger btn--sm">Delete</button></form>
+  </td>
+</tr>
+{% else %}<tr><td colspan="6" class="dim">No examples yet.</td></tr>{% endfor %}
+</tbody></table></div>
+<button class="btn btn--primary mt-2" data-modal-open="exampleModal" data-edit-reset>Add example</button>
+
+<div class="modal-backdrop" id="exampleModal" role="dialog" aria-modal="true" aria-hidden="true">
+ <div class="modal"><div class="modal__head"><h3>Scam example</h3><button class="modal__close" data-modal-close aria-label="Close">&times;</button></div>
+  <form method="post" action="{{ url_for('admin.scam_example_save') }}" data-edit-form>
+   <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id">
+   <div class="form-group"><label for="e_category_id">Category</label>
+     <select class="input" id="e_category_id" name="category_id">
+       <option value="">None</option>{% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+     </select></div>
+   <div class="form-group"><label for="e_channel">Channel</label>
+     <select class="input" id="e_channel" name="channel">
+       {% for ch in ['sms','email','whatsapp','call','webpage','payment'] %}<option value="{{ ch }}">{{ ch }}</option>{% endfor %}
+     </select></div>
+   <div class="form-group"><label for="e_sender">Sender</label><input class="input" id="e_sender" name="sender" required></div>
+   <div class="form-group"><label for="e_subject">Subject (optional)</label><input class="input" id="e_subject" name="subject"></div>
+   <div class="form-group"><label for="e_body">Message body (must be fictional)</label><textarea class="input" id="e_body" name="body" required></textarea></div>
+   <div class="form-group"><label for="e_is_scam">Is this a scam?</label>
+     <select class="input" id="e_is_scam" name="is_scam"><option value="1">Yes — scam</option><option value="0">No — safe</option></select></div>
+   <div class="form-group"><label for="e_explanation">Explanation</label><textarea class="input" id="e_explanation" name="explanation" required></textarea></div>
+   <div class="form-group"><label for="e_warning_signs">Warning signs (one per line)</label><textarea class="input" id="e_warning_signs" name="warning_signs" required></textarea></div>
+   <div class="form-group"><label for="e_difficulty">Difficulty</label>
+     <select class="input" id="e_difficulty" name="difficulty">{% for d in ['easy','medium','hard'] %}<option value="{{ d }}">{{ d }}</option>{% endfor %}</select></div>
+   <button class="btn btn--primary btn--block" type="submit">Save example</button>
+  </form>
+ </div></div>
+{% endblock %}

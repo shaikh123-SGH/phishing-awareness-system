@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3.6rem 0 2rem">
+  <div class="container">
+    <span class="eyebrow">My profile</span>
+    <h1>{{ user.full_name }}</h1>
+    <p class="hero__lead">{{ user.email }}{% if user.city %} · {{ user.city }}{% endif %}{% if user.occupation %} · {{ user.occupation }}{% endif %}</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="grid grid--4">
+      <div class="card reveal">
+        <span class="dim">Pre-test score</span>
+        <h2>{{ pre.percentage ~ '%' if pre else 'Not taken' }}</h2>
+        {% if not pre %}<a class="btn btn--ghost btn--sm" href="{{ url_for('quiz.pre_test') }}">Take pre-test</a>{% endif %}
+      </div>
+      <div class="card reveal" data-reveal-delay="1">
+        <span class="dim">Post-test score</span>
+        <h2>{{ post.percentage ~ '%' if post else 'Not taken' }}</h2>
+        {% if not post %}<a class="btn btn--ghost btn--sm" href="{{ url_for('quiz.post_test') }}">Take post-test</a>{% endif %}
+      </div>
+      <div class="card reveal" data-reveal-delay="2">
+        <span class="dim">Improvement</span>
+        <h2 style="color:{{ 'var(--safe)' if (improvement or 0) >= 0 else 'var(--danger)' }}">
+          {% if improvement is not none %}{{ '+' if improvement >= 0 }}{{ improvement }}%{% else %}—{% endif %}
+        </h2>
+      </div>
+      <div class="card reveal" data-reveal-delay="3">
+        <span class="dim">Awareness level</span>
+        <h2>{{ level }}</h2>
+      </div>
+    </div>
+
+    <div class="card mt-2 reveal">
+      <h2>Learning progress</h2>
+      <p class="mb-0">{{ read_categories }} of {{ total_categories }} scam briefings opened.</p>
+      <div class="progress mt-1"><div class="progress__bar" data-progress="{{ progress_percent }}"></div></div>
+      <div class="row mt-2">
+        <a class="btn btn--ghost btn--sm" href="{{ url_for('quiz.learning') }}">Continue learning path</a>
+        <a class="btn btn--ghost btn--sm" href="{{ url_for('quiz.spot_scam') }}">Practise Spot the Scam</a>
+      </div>
+    </div>
+
+    <h2 class="mt-3 reveal">Quiz history</h2>
+    <div class="table-wrap mt-2 reveal">
+      <table>
+        <thead>
+          <tr><th>Activity</th><th>Score</th><th>Percentage</th><th>Awareness level</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          {% for a in attempts %}
+            <tr>
+              <td>{{ {'pre':'Pre-Test','post':'Post-Test','spot':'Spot the Scam'}[a.quiz_type] }}</td>
+              <td>{{ a.score }} / {{ a.total }}</td>
+              <td>{{ a.percentage }}%</td>
+              <td>{{ a.awareness_level }}</td>
+              <td>{{ a.attempted_at | fmt_date }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" class="dim">No attempts recorded yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Request could not be processed{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="text-center">
+    <h1 style="font-size:4rem">400</h1>
+    <h2>Request could not be processed</h2>
+    <p>{% if message %}{{ message }}{% else %}Your session may have expired. Please reload the page and try again.{% endif %}</p>
+    <a class="btn btn--primary mt-2" href="{{ url_for('main.index') }}">Back to home</a>
+  </div>
+</section>
+{% endblock %}

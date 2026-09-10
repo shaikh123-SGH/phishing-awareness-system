@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Resources{% endblock %}
+{% block description %}Checklists, posters, infographics and articles you can read online or download for awareness sessions.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 2.4rem">
+  <div class="container">
+    <span class="eyebrow">Resources</span>
+    <h1>Material you can use and share</h1>
+    <p class="hero__lead">Checklists, posters, infographics and articles written for community sessions. Each item can be opened here or downloaded as text for printing.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <form class="filter-bar" method="get" action="{{ url_for('main.resources') }}" role="search">
+      <label class="visually-hidden" for="resourceSearch">Search resources</label>
+      <input class="input" style="max-width:300px" type="search" id="resourceSearch" name="q" value="{{ search }}"
+             placeholder="Search resources" data-filter-input data-filter-target="[data-resource-card]">
+      <button class="btn btn--ghost btn--sm" type="submit">{{ ico.icon('search', 15) }} Search</button>
+      {% for value, label in [('','All'),('checklist','Checklists'),('poster','Posters'),('infographic','Infographics'),('article','Articles'),('tip','Tips')] %}
+        <span class="chip {{ 'is-active' if rtype == value }}" data-filter-chip data-filter-group="rtype" data-filter-value="{{ value }}">{{ label }}</span>
+      {% endfor %}
+    </form>
+
+    <div class="grid grid--3">
+      {% for r in resources %}
+        <article class="card card--hover reveal" data-reveal-delay="{{ loop.index0 % 3 + 1 }}" data-resource-card
+                 data-filter-item="rtype" data-filter-key="{{ r.resource_type }}"
+                 data-search="{{ r.title }} {{ r.summary }}" data-detail-modal="res{{ r.id }}"
+                 tabindex="0" role="button" aria-label="Open {{ r.title }}">
+          <div class="card__icon">{{ ico.icon('file') }}</div>
+          <span class="badge badge--muted">{{ r.resource_type }}</span>
+          <h3 class="mt-1">{{ r.title }}</h3>
+          <p>{{ r.summary }}</p>
+          <div class="card__foot">
+            <span class="muted">Open →</span>
+            <a class="btn btn--ghost btn--sm" href="{{ url_for('main.resource_download', resource_id=r.id) }}">Download</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+    <p class="empty-state" data-empty-state hidden>No resources match your search.</p>
+  </div>
+</section>
+
+{% for r in resources %}
+<div class="modal-backdrop" id="res{{ r.id }}" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="res{{ r.id }}Title">
+  <div class="modal">
+    <div class="modal__head">
+      <div>
+        <span class="eyebrow">{{ r.resource_type }}</span>
+        <h3 id="res{{ r.id }}Title">{{ r.title }}</h3>
+      </div>
+      <button class="modal__close" data-modal-close aria-label="Close">&times;</button>
+    </div>
+    <p class="muted">{{ r.summary }}</p>
+    <div style="white-space:pre-wrap;font-size:0.94rem;color:var(--text)">{{ r.content }}</div>
+    <a class="btn btn--primary mt-2" href="{{ url_for('main.resource_download', resource_id=r.id) }}">Download for printing</a>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

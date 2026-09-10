@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}Spot the Scam{% endblock %}
+{% block description %}Decide whether each fictional message is safe or a scam, see the warning signs instantly and get a final awareness score.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3.6rem 0 2rem">
+  <div class="container">
+    <span class="eyebrow">Interactive exercise</span>
+    <h1>Spot the Scam</h1>
+    <p class="hero__lead">Read each fictional message and decide: is it SAFE or a SCAM? You will see the answer and the warning signs immediately.</p>
+  </div>
+</section>
+
+<section class="section--tight" id="spotScam">
+  <div class="container quiz-shell">
+    <div class="card mb-2">
+      <div class="row row--between">
+        <strong id="spotCounter">Message 1</strong>
+        <span class="muted">Score: <strong id="spotScore" class="counter">0</strong> ·
+          Correct <strong id="spotCorrect">0</strong> · Incorrect <strong id="spotWrong">0</strong></span>
+      </div>
+      <div class="progress mt-1"><div class="progress__bar" id="spotProgress"></div></div>
+    </div>
+
+    <div id="spotPlay">
+      {% for e in examples %}
+        <div class="quiz-card {{ 'is-active' if loop.first }}" data-example data-example-id="{{ e.id }}"
+             data-is-scam="{{ 1 if e.is_scam else 0 }}" data-explanation="{{ e.explanation }}"
+             data-warning-signs="{{ e.warning_signs }}">
+          <div class="message-mock">
+            <div class="message-mock__head">
+              <span class="message-mock__avatar">{{ e.sender[0] | upper }}</span>
+              <div class="message-mock__meta">
+                <strong>{{ e.sender }}</strong>
+                <span>{{ e.subject or e.channel | capitalize }}</span>
+              </div>
+              <span class="channel-tag">{{ e.channel }}</span>
+            </div>
+            <div class="message-mock__body">{{ e.body }}</div>
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="row mt-2">
+        <button class="btn btn--safe" data-answer="safe">{{ ico.icon('check', 17) }} This is SAFE</button>
+        <button class="btn btn--danger" data-answer="scam">{{ ico.icon('alert', 17) }} This is a SCAM</button>
+      </div>
+
+      <div id="spotFeedback" hidden></div>
+      <button class="btn btn--primary mt-2" id="spotNext" hidden>Next message</button>
+    </div>
+
+    <div id="spotFinal" class="card text-center" hidden style="padding:2.4rem">
+      <span class="eyebrow">Final result</span>
+      <h2>Exercise complete</h2>
+      <div class="score-ring" data-ring-live style="margin:1.4rem auto">
+        <span class="score-ring__value">0%</span>
+      </div>
+      <p class="mb-0"><strong data-final-score>0</strong> correct answers ·
+        <strong data-final-percent>0%</strong> accuracy</p>
+      <p class="muted">Awareness level: <strong data-final-level>calculating…</strong></p>
+      <div class="grid grid--2 mt-2" style="max-width:420px;margin-inline:auto">
+        <div class="card"><span class="dim">Correct</span><h3 data-final-correct>0</h3></div>
+        <div class="card"><span class="dim">Incorrect</span><h3 data-final-wrong>0</h3></div>
+      </div>
+      <div class="row mt-3" style="justify-content:center">
+        <button class="btn btn--ghost" id="spotRestart">Try again</button>
+        <a class="btn btn--primary" href="{{ url_for('quiz.post_test') }}">Take the post-test</a>
+      </div>
+      {% if session_user.role != 'user' %}
+        <p class="hint mt-2">Sign in to save your score and track your awareness progress.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/spot-scam.js') }}" defer></script>
+{% endblock %}

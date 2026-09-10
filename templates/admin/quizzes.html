@@ -1,0 +1,42 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Quiz questions{% endblock %}{% block heading %}Quiz questions{% endblock %}
+{% block content %}
+<div class="table-wrap"><table><thead><tr><th>Question</th><th>Type</th><th>Options</th><th>Actions</th></tr></thead><tbody>
+{% for q in questions %}
+<tr>
+  <td style="max-width:340px">{{ q.question }}</td>
+  <td><span class="badge badge--muted">{{ q.quiz_type }}</span></td>
+  <td><ul style="margin:0;padding-left:1rem">
+    {% for o in q.options %}<li>{{ o.option_text }}{% if o.is_correct %} <strong>(correct)</strong>{% endif %}</li>{% endfor %}
+  </ul></td>
+  <td class="row">
+    <button class="btn btn--ghost btn--sm" data-edit='{{ q | tojson }}' data-modal-open="quizModal">Edit</button>
+    <form method="post" action="{{ url_for('admin.quiz_delete', question_id=q.id) }}" data-confirm="Delete this question?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn--danger btn--sm">Delete</button></form>
+  </td>
+</tr>
+{% else %}<tr><td colspan="4" class="dim">No questions yet.</td></tr>{% endfor %}
+</tbody></table></div>
+<button class="btn btn--primary mt-2" data-modal-open="quizModal" data-edit-reset>Add question</button>
+
+<div class="modal-backdrop" id="quizModal" role="dialog" aria-modal="true" aria-hidden="true">
+ <div class="modal"><div class="modal__head"><h3>Quiz question</h3><button class="modal__close" data-modal-close aria-label="Close">&times;</button></div>
+  <form method="post" action="{{ url_for('admin.quiz_save') }}" data-edit-form>
+   <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="id">
+   <div class="form-group"><label for="q_quiz_type">Quiz type</label>
+     <select class="input" id="q_quiz_type" name="quiz_type">{% for t in ['pre','post','general'] %}<option value="{{ t }}">{{ t }}</option>{% endfor %}</select></div>
+   <div class="form-group"><label for="q_category_id">Category</label>
+     <select class="input" id="q_category_id" name="category_id"><option value="">None</option>
+       {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div>
+   <div class="form-group"><label for="q_question">Question</label><textarea class="input" id="q_question" name="question" required></textarea></div>
+   {% for i in range(1,5) %}
+     <div class="form-group"><label for="q_option{{ i }}">Option {{ i }}{% if i > 2 %} (optional){% endif %}</label>
+       <input class="input" id="q_option{{ i }}" name="option{{ i }}"></div>
+   {% endfor %}
+   <div class="form-group"><label for="q_correct_option">Correct option</label>
+     <select class="input" id="q_correct_option" name="correct_option">{% for i in range(1,5) %}<option value="{{ i }}">Option {{ i }}</option>{% endfor %}</select></div>
+   <div class="form-group"><label for="q_explanation">Explanation</label><textarea class="input" id="q_explanation" name="explanation" required></textarea></div>
+   <button class="btn btn--primary btn--block" type="submit">Save question</button>
+  </form>
+ </div></div>
+{% endblock %}

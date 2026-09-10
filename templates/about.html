@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% import 'components/icons.html' as ico %}
+{% block title %}About the Project{% endblock %}
+{% block description %}Project introduction, problem statement, aim, objectives, beneficiaries, social impact and scope of the Phishing Scam & Fraud Detection Awareness Program.{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:4rem 0 3rem">
+  <div class="container">
+    <span class="eyebrow">Semester 5 · Community Engagement Project</span>
+    <h1>About this project</h1>
+    <p class="hero__lead">
+      A community-facing cybersecurity awareness platform that teaches people to recognise
+      phishing, online fraud and payment scams — and to respond correctly when targeted.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid grid--2">
+    <article class="card reveal">
+      <span class="eyebrow">Introduction</span>
+      <h2>Project introduction</h2>
+      <p>
+        Digital payments, online shopping and messaging apps are now part of daily life for
+        students, families and small businesses. The same convenience has given fraudsters a
+        low-cost route to a very large audience. This project builds an interactive awareness
+        platform that explains how common scams work, lets people practise identifying them on
+        realistic fictional examples, and measures whether awareness actually improved.
+      </p>
+    </article>
+    <article class="card reveal" data-reveal-delay="2">
+      <span class="eyebrow">Problem statement</span>
+      <h2>The problem being addressed</h2>
+      <p>
+        People fall victim to online scams not because the attacks are technically advanced, but
+        because the warning signs are unfamiliar. Awareness material that does exist is often
+        scattered, text-heavy, written in technical language, or purely one-way. There is little
+        opportunity to practise recognition, and almost no way to check whether a session
+        actually changed behaviour.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="grid grid--2">
+      <article class="card reveal">
+        <span class="eyebrow">Need</span>
+        <h2>Why the project is needed</h2>
+        <ul class="tip-list">
+          <li>Scam techniques change faster than printed awareness material can be revised.</li>
+          <li>Community members need plain-language explanations, not technical jargon.</li>
+          <li>Recognition is a skill, and skills need practice rather than reading alone.</li>
+          <li>Victims often do not know the correct first steps, which delays reporting.</li>
+          <li>Awareness programmes rarely measure whether understanding improved.</li>
+        </ul>
+      </article>
+      <article class="card reveal" data-reveal-delay="2">
+        <span class="eyebrow">Aim</span>
+        <h2>Aim of the project</h2>
+        <p>
+          To improve community awareness of phishing, online fraud and payment scams through an
+          accessible, interactive platform, so that participants can identify suspicious
+          communication, prevent avoidable losses, and respond safely and quickly if targeted.
+        </p>
+        <h3 class="mt-2">Objectives</h3>
+        <ul class="tip-list">
+          <li>Explain twelve common scam categories in simple, structured language.</li>
+          <li>Provide an interactive Spot the Scam exercise using fictional examples.</li>
+          <li>Measure awareness through a pre-test and a post-test with comparison.</li>
+          <li>Offer curated videos, checklists and printable material for field sessions.</li>
+          <li>Give clear emergency guidance for people who have already been targeted.</li>
+          <li>Collect feedback so the material can be improved after each session.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <span class="eyebrow">Beneficiaries</span>
+      <h2>Who this project serves</h2>
+    </div>
+    <div class="grid grid--4">
+      {% set groups = [
+        ('users','College students','First-time users of digital payments, and frequent targets of job and shopping scams.'),
+        ('cart','Small shopkeepers','Daily QR and UPI users exposed to tampered codes and fake payment confirmations.'),
+        ('user','Homemakers and elders','Often targeted by vishing, fake customer care and OTP requests.'),
+        ('briefcase','Job seekers','Vulnerable to registration-fee frauds and fake work-from-home offers.')
+      ] %}
+      {% for icon_name, title, text in groups %}
+        <article class="card reveal" data-reveal-delay="{{ loop.index }}">
+          <div class="card__icon">{{ ico.icon(icon_name) }}</div>
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-2)">
+  <div class="container grid grid--2">
+    <article class="card reveal">
+      <span class="eyebrow">Social impact</span>
+      <h2>Expected social impact</h2>
+      <p>
+        Every person who learns to pause before clicking protects not only their own savings but
+        also the contacts a compromised account would have been used to target. The platform is
+        designed to be used in classroom sessions, neighbourhood workshops and self-paced study,
+        with the same content available afterwards for revision and for sharing at home.
+      </p>
+      <ul class="tip-list mt-1">
+        <li>Fewer avoidable financial losses in the participating community.</li>
+        <li>Faster and more confident reporting when an incident does happen.</li>
+        <li>Awareness that spreads outward from each participant to their family.</li>
+      </ul>
+    </article>
+    <article class="card reveal" data-reveal-delay="2">
+      <span class="eyebrow">Scope</span>
+      <h2>Project scope</h2>
+      <p><strong>In scope:</strong> awareness education, interactive recognition practice, measurement of
+        learning through pre-test and post-test, curated videos, downloadable material, emergency
+        guidance and administrator-managed content.</p>
+      <p><strong>Out of scope:</strong> investigating incidents, recovering money, scanning links or files,
+        legal advice, and any handling of real financial credentials.</p>
+      <div id="privacy" class="disclaimer mt-2">
+        <strong>Privacy and safety notice:</strong> the platform stores only a name, email, optional
+        participation details and quiz results. It never asks for and must never be given a real
+        password, OTP, PIN, card number or banking credential. All scam examples are fictional.
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Reports{% endblock %}{% block heading %}Reports &amp; analytics{% endblock %}
+{% block content %}
+<div class="grid grid--2">
+  <div class="card"><h3>Average score by quiz type</h3><div id="chartScores" class="chart"></div></div>
+  <div class="card"><h3>Awareness levels</h3><div id="chartLevels" class="chart"></div></div>
+  <div class="card"><h3>Registrations over time</h3><div id="chartUsers" class="chart"></div></div>
+  <div class="card"><h3>Feedback ratings</h3><div id="chartRatings" class="chart"></div></div>
+</div>
+<p class="hint mt-2">Charts are drawn from live database values and animate on load.</p>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>{% endblock %}
